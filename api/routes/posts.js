@@ -48,7 +48,7 @@ res.status(403).json("forbidden to uupdate the post")
 })
 router.delete("/:id",async (req,res)=>{
     try{
-        const post=await Post.findById(req.params.id)
+        const post=await Post.find(req.params.id)
       
 // if the user who logged in (req.body.userId)
         if(post.userId ===req.body.userId){
@@ -127,18 +127,17 @@ catch(err){
 
 
 })
-router.get("/profile/:username",async (req,res)=>{
+// get all the users posts
+router.get('/profile/:username',async (req,res)=>{
     try{
- const user=await User.findOne({username:req.params.username})
- const posts=await Post.find({userId:user._id})
- res.status(200).json(posts);
+        const user=await User.findOne({username:req.params.username})
+         const posts=await Post.find({userId:user._id})
+ res.status(200).json(posts)
     }
-    catch(err){
-        res.status(500).json(err)
+    catch (err){
+        res.status(500).json(`Error:${err.message}`)
+
     }
-
-
-
 })
 
 module.exports=router

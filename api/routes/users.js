@@ -3,15 +3,15 @@ const bcrypt=require("bcrypt")
 const router=require("express").Router()
 
 
-router.get("/",async(req,res)=>{
-try{
-const users=await User.find()
-res.status(200).json(users)
-}
-catch(err){
-    res.status(500).json(`Error: ${err.message}`)
-}
-
+router.get("/users", async (req,res)=>{
+    try{
+  const users=await User.find()
+  res.send(users)
+    }
+    catch(err){
+    
+  console.log( ` Error: ${err.message}` )
+  }
 })
 router.put("/:id",async(req,res)=>{
     // if (req.body.userId==req.params.id) or the req.body is admin
@@ -45,6 +45,30 @@ if(req.body.password){
   }
 //   to mean that a user cannot update other id
 })
+//get  friends
+router.get("/friends/:userId",async (req,res)=>{
+    try{
+const user=await User.findById(req.params.userId)  
+const friends=await Promise.all(
+ user.followings.map((friendId)=>{
+     return User.findById(friendId)
+ })
+) 
+let friendList=[]
+friends.map(friend=>{
+    const {_id,username,profilePicture}=friend;
+    friendList.push({_id,username,profilePicture})
+}
+    ) 
+    res.status(200).json(friendList)
+} 
+// it returns the single promise if all the input promises are fulfilled
+
+    catch(err){
+res.status(500).json(`Err: ${err.message}`)
+    }
+
+})
 router.delete("/:id",async (req,res)=>{
 if(req.body.userId===req.params || req.body.isAdmin){
 
@@ -67,9 +91,14 @@ else{
 
 
 })
-router.get("/:id",async (req,res)=>{
+router.get("/",async (req,res)=>{
+    const userId=req.query.userId
+    const username=req.query.username
     try{
-        const user=await User.findById(req.params.id)
+        const user= userId ?
+        await User.findById(userId):
+        await User.findOne({username:username})
+
  
          const {password, updatedAt,...other}=user._doc
         res.status(200).json(other)
