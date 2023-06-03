@@ -1,6 +1,0 @@
-   "username":"beglin",  
-    "email":"beglin@gmail.com",
-    "password":"beg@123",
-    "profilePicture":"person/7.jpeg",
-    "coverPicture":"post/7.jpeg"
-    
