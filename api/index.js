@@ -6,6 +6,8 @@ const postRoute=require('./routes/posts')
  const path=require("path")
 const app=express()
 
+const conversationRoute=require("./routes/conversations")
+const messageRoute=require("./routes/messages")
 const multer=require("multer")  //
 
 const dotenv=require("dotenv")
@@ -50,7 +52,7 @@ app.use("/images",express.static(path.join(__dirname,"/public/images/")))
 //   });
   const storage=multer.diskStorage({
     destination:(req,file,cb)=>{
-        cb(null,"public/images")
+        cb(null,"public/images/")
     },
     filename:(req,file,cb)=>{
     cb(null,file.originalname)
@@ -69,7 +71,8 @@ app.use("/images",express.static(path.join(__dirname,"/public/images/")))
 app.use("/api/posts",postRoute)
 app.use("/api/users",userRoute)
 app.use("/api/auth",authRoute)
-
+app.use("/api/conversations",conversationRoute)
+app.use("/api/messages",messageRoute)
 // any request will be taken to the authorization zone
 app.listen(7000,()=>{
  console.log('the server is running  on port 7000 ');

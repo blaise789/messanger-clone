@@ -3,16 +3,6 @@ const bcrypt=require("bcrypt")
 const router=require("express").Router()
 
 
-router.get("/users", async (req,res)=>{
-    try{
-  const users=await User.find()
-  res.send(users)
-    }
-    catch(err){
-    
-  console.log( ` Error: ${err.message}` )
-  }
-})
 router.put("/:id",async(req,res)=>{
     // if (req.body.userId==req.params.id) or the req.body is admin
 
